@@ -1,32 +1,35 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view />
+    <canvas ref="can" class="fabric-canvas"></canvas>
   </div>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+<script>
+import { fabric } from "fabric";
+
+console.log("fabric : ", fabric);
+
+export default {
+  mounted() {
+    const ref = this.$refs.can;
+    const canvas = new fabric.Canvas(ref);
+    const rect = new fabric.Rect({
+      fill: "red",
+      width: 50,
+      height: 50
+    });
+    canvas.add(rect);
+  }
+};
+</script>
+
+<style>
+.fabric-canvas {
+  width: 100% !important;
+  height: 100% !important;
 }
 
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
+.canvas-container {
+  background-color: #808080;
 }
 </style>
