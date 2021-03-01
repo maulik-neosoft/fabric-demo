@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <canvas ref="can" class="fabric-canvas"></canvas>
+    <input v-model="text" style="margin-top: 10px;" /><button @click="addText">Add Text</button>
   </div>
 </template>
 
@@ -10,15 +11,36 @@ import { fabric } from "fabric";
 console.log("fabric : ", fabric);
 
 export default {
+  data() {
+    return {
+      text: null,
+      canvas: null
+    };
+  },
   mounted() {
     const ref = this.$refs.can;
-    const canvas = new fabric.Canvas(ref);
+    this.canvas = new fabric.Canvas(ref);
     const rect = new fabric.Rect({
       fill: "red",
       width: 50,
       height: 50
     });
-    canvas.add(rect);
+    this.canvas.add(rect);
+  },
+  methods: {
+    addText() {
+      const _text = new fabric.IText(this.text, {
+        fontFamily: "arial black",
+        fontSize: 10
+      });
+
+      // const text = new fabric.Text(this.text, {
+      //   fill: "black"
+      // });
+
+      this.canvas.add(_text);
+      this.$forceUpdate();
+    }
   }
 };
 </script>
