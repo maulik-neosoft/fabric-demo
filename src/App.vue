@@ -26,10 +26,10 @@ export default {
     });
     this.canvas.add(rect);
 
-    fabric.Image.fromURL("http://fabricjs.com/assets/pug_small.jpg", (myImg) => {
-      const img1 = myImg.set({ left: 0, top: 0, width: 150, height: 150 });
-      this.canvas.add(img1);
-    });
+    // fabric.Image.fromURL("http://fabricjs.com/assets/pug_small.jpg", (myImg) => {
+    //   const img1 = myImg.set({ left: 0, top: 0, width: 150, height: 150 });
+    //   this.canvas.add(img1);
+    // });
   },
   methods: {
     addText() {
