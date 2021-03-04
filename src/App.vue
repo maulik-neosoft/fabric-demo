@@ -12,7 +12,7 @@
     </div>
 
     <!-- SVG Image -->
-    <div>
+    <div style="border: 1px solid black;">
       <svg id="svg" width="800" height="600" xmlns="http://www.w3.org/2000/svg">
         <g>
           <title>Layer 1</title>
@@ -41,6 +41,14 @@
             :stroke="controls.strokeColor"
             :fill="controls.fillColor"
           />
+          <text
+            :y="controls.y"
+            :x="controls.x"
+            font-size="20"
+            :fill="controls.textColor"
+          >
+            {{ controls.text }}
+          </text>
         </g>
       </svg>
     </div>
@@ -64,6 +72,30 @@
         min="0"
       />
       <br /><br />
+      <label>Text&nbsp;&nbsp;&nbsp;</label>
+      <input v-model="controls.text" />
+      <br /><br />
+      <label>Text Color&nbsp;&nbsp;&nbsp;</label>
+      <input v-model="controls.textColor" type="color" />
+      <br /><br />
+      <input
+        v-model="controls.x"
+        type="range"
+        min="1"
+        max="500"
+        value="50"
+        class="slider"
+      />
+      <br /><br />
+      <input
+        v-model="controls.y"
+        type="range"
+        min="1"
+        max="500"
+        value="50"
+        class="slider"
+      />
+      <br /><br />
       <button @click="downloadSVG">Download SVG</button>
     </div>
   </div>
@@ -81,7 +113,11 @@ export default {
         // color: "#000",
         strokeColor: "#000",
         fillColor: "#fff",
-        opacity: 1
+        opacity: 1,
+        text: "Hello, World!",
+        textColor: "#000",
+        x: 350,
+        y: 389
       }
     };
   },
