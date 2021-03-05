@@ -9,12 +9,12 @@
               <!-- Options -->
               <b-card no-body class="mb-1">
                 <b-card-header header-tag="header" class="p-1" role="tab">
-                  <b-button block v-b-toggle.accordion-2 variant="info">
+                  <b-button block v-b-toggle.accordion-5 variant="info">
                     Options
                   </b-button>
                 </b-card-header>
                 <b-collapse
-                  id="accordion-2"
+                  id="accordion-5"
                   accordion="my-accordion"
                   role="tabpanel"
                 >
@@ -59,11 +59,11 @@
                 </b-collapse>
               </b-card>
 
-              <!-- Gravetar -->
+              <!-- Emoji -->
               <b-card no-body class="mb-1">
                 <b-card-header header-tag="header" class="p-1" role="tab">
                   <b-button block v-b-toggle.accordion-2 variant="info">
-                    Gravetar
+                    Emoji
                   </b-button>
                 </b-card-header>
                 <b-collapse
@@ -71,8 +71,14 @@
                   accordion="my-accordion"
                   role="tabpanel"
                 >
-                  <b-card-body>
-                    <b-card-text></b-card-text>
+                  <b-card-body class="ml-3">
+                    <img
+                      v-for="(emoji, index) in emojis"
+                      :key="index"
+                      :src="emoji"
+                      style="width: 50px; border: 1px solid gray; padding: 5px; margin: 3px; cursor: pointer;"
+                      @click="addEmoji(emoji)"
+                    />
                   </b-card-body>
                 </b-collapse>
               </b-card>
@@ -117,8 +123,8 @@
       <div class="col-6">
         <b-button-group size="sm">
           <b-button @click="toggleFlip">Flip</b-button>
-          <!-- <b-button>Middle</b-button>
-          <b-button>Right</b-button> -->
+          <b-button @click="removeSelectedObject">Delete</b-button>
+          <!-- <b-button>Right</b-button> -->
         </b-button-group>
         <div
           class="page"
@@ -197,6 +203,44 @@ export default {
         "#0f77c0",
         "#3469b7",
         "#c50404"
+      ],
+      emojis: [
+        require("@/assets/emoji/angry-1.svg"),
+        require("@/assets/emoji/embarrassed.svg"),
+        require("@/assets/emoji/kissing.svg"),
+        require("@/assets/emoji/smiling.svg"),
+        require("@/assets/emoji/angry.svg"),
+        require("@/assets/emoji/emoticons.svg"),
+        require("@/assets/emoji/mad.svg"),
+        require("@/assets/emoji/surprised-1.svg"),
+        require("@/assets/emoji/bored-1.svg"),
+        require("@/assets/emoji/happy-1.svg"),
+        require("@/assets/emoji/nerd.svg"),
+        require("@/assets/emoji/surprised.svg"),
+        require("@/assets/emoji/bored-2.svg"),
+        require("@/assets/emoji/happy-2.svg"),
+        require("@/assets/emoji/ninja.svg"),
+        require("@/assets/emoji/suspicious-1.svg"),
+        require("@/assets/emoji/bored.svg"),
+        require("@/assets/emoji/happy-3.svg"),
+        require("@/assets/emoji/quiet.svg"),
+        require("@/assets/emoji/suspicious.svg"),
+        require("@/assets/emoji/confused-1.svg"),
+        require("@/assets/emoji/happy-4.svg"),
+        require("@/assets/emoji/sad.svg"),
+        require("@/assets/emoji/tongue-out-1.svg"),
+        require("@/assets/emoji/confused.svg"),
+        require("@/assets/emoji/happy.svg"),
+        require("@/assets/emoji/secret.svg"),
+        require("@/assets/emoji/tongue-out.svg"),
+        require("@/assets/emoji/crying-1.svg"),
+        require("@/assets/emoji/ill.svg"),
+        require("@/assets/emoji/smart.svg"),
+        require("@/assets/emoji/unhappy.svg"),
+        require("@/assets/emoji/crying.svg"),
+        require("@/assets/emoji/in-love.svg"),
+        require("@/assets/emoji/smile.svg"),
+        require("@/assets/emoji/wink.svg")
       ]
     };
   },
@@ -231,6 +275,7 @@ export default {
         "object:selected": this.onObjectSelected,
         "selection:cleared": this.onSelectedCleared
       });
+
       // piggyback on `canvas.findTarget`, to fire "object:over" and "object:out" events
       // this.canvas.findTarget = (originalFn => {
       //   return () => {
@@ -305,6 +350,18 @@ export default {
         hasRotatingPoint: true
       });
       this.canvas.add(textSample);
+      this.text = null;
+    },
+    removeSelectedObject() {
+      this.canvas.remove(this.canvas.getActiveObject());
+    },
+    addEmoji() {
+      // scaleX: .25,
+      // scaleY: .25
+      fabric.Image.fromURL(require("@/assets/emoji/angry-1.svg"), image => {
+        var img1 = image.set({ left: 0, top: 0, height: 150, width: 150 });
+        this.canvas.add(img1);
+      });
     }
   }
 };
