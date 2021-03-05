@@ -8,6 +8,31 @@
             <div class="accordion" role="tablist">
               <b-card no-body class="mb-1">
                 <b-card-header header-tag="header" class="p-1" role="tab">
+                  <b-button block v-b-toggle.accordion-2 variant="info">
+                    Options
+                  </b-button>
+                </b-card-header>
+                <b-collapse
+                  id="accordion-2"
+                  accordion="my-accordion"
+                  role="tabpanel"
+                >
+                  <b-card-body>
+                    <b-select v-model="clothType">
+                      <b-select-option
+                        v-for="(item, index) in items"
+                        :key="index"
+                        :value="index"
+                      >
+                        {{ item.type }}
+                      </b-select-option>
+                    </b-select>
+                  </b-card-body>
+                </b-collapse>
+              </b-card>
+
+              <b-card no-body class="mb-1">
+                <b-card-header header-tag="header" class="p-1" role="tab">
                   <b-button block v-b-toggle.accordion-1 variant="info">
                     Color
                   </b-button>
@@ -80,16 +105,8 @@
           class="page"
           style="width: 530px; height: 630px; position: relative; background-color: rgb(255, 255, 255); margin: 0px auto;"
         >
-          <img
-            v-if="isFront"
-            src="@/assets/images/crew_front.png"
-            :style="getColorStyle"
-          />
-          <img
-            v-else
-            src="@/assets/images/crew_back.png"
-            :style="getColorStyle"
-          />
+          <img v-if="isFront" :src="front" :style="getColorStyle" />
+          <img v-else :src="back" :style="getColorStyle" />
           <div
             id="drawingArea"
             style="position: absolute;top: 100px;left: 160px;z-index: 10;width: 200px;height: 400px;"
@@ -119,6 +136,24 @@ export default {
       color: "#ffffff",
       frontCanvas: null,
       backCanvas: null,
+      clothType: 0,
+      items: [
+        {
+          type: "Crew",
+          front: require("@/assets/images/crew_front.png"),
+          back: require("@/assets/images/crew_back.png")
+        },
+        {
+          type: "Hoodie",
+          front: require("@/assets/images/mens_hoodie_front.png"),
+          back: require("@/assets/images/mens_hoodie_back.png")
+        },
+        {
+          type: "Tank",
+          front: require("@/assets/images/mens_tank_front.png"),
+          back: require("@/assets/images/mens_tank_back.png")
+        }
+      ],
       colors: [
         "#ffffff",
         "#616161",
@@ -147,6 +182,12 @@ export default {
   computed: {
     getColorStyle() {
       return "background-color: " + this.color + ";";
+    },
+    front() {
+      return this.items[this.clothType].front;
+    },
+    back() {
+      return this.items[this.clothType].back;
     }
   },
   methods: {
