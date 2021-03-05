@@ -6,6 +6,7 @@
         <div class="card">
           <div class="card-body">
             <div class="accordion" role="tablist">
+              <!-- Options -->
               <b-card no-body class="mb-1">
                 <b-card-header header-tag="header" class="p-1" role="tab">
                   <b-button block v-b-toggle.accordion-2 variant="info">
@@ -31,6 +32,7 @@
                 </b-collapse>
               </b-card>
 
+              <!-- Color -->
               <b-card no-body class="mb-1">
                 <b-card-header header-tag="header" class="p-1" role="tab">
                   <b-button block v-b-toggle.accordion-1 variant="info">
@@ -57,6 +59,7 @@
                 </b-collapse>
               </b-card>
 
+              <!-- Gravetar -->
               <b-card no-body class="mb-1">
                 <b-card-header header-tag="header" class="p-1" role="tab">
                   <b-button block v-b-toggle.accordion-2 variant="info">
@@ -74,6 +77,7 @@
                 </b-collapse>
               </b-card>
 
+              <!-- Text  -->
               <b-card no-body class="mb-1">
                 <b-card-header header-tag="header" class="p-1" role="tab">
                   <b-button block v-b-toggle.accordion-3 variant="info">
@@ -86,7 +90,22 @@
                   role="tabpanel"
                 >
                   <b-card-body>
-                    <!--  -->
+                    <b-input-group>
+                      <b-form-input
+                        v-model="text"
+                        placeholder="Enter Text..."
+                      />
+                      <b-input-group-append>
+                        <b-input
+                          type="color"
+                          style="width: 40px;"
+                          v-model="textColor"
+                        />
+                        <b-button variant="outline-primary" @click="addText">
+                          Enter
+                        </b-button>
+                      </b-input-group-append>
+                    </b-input-group>
                   </b-card-body>
                 </b-collapse>
               </b-card>
@@ -112,7 +131,7 @@
             style="position: absolute;top: 100px;left: 160px;z-index: 10;width: 200px;height: 400px;"
           >
             <canvas
-              id="tcanvas"
+              ref="canvas"
               width="200"
               height="400"
               class="hover"
@@ -136,6 +155,8 @@ export default {
       color: "#ffffff",
       frontCanvas: null,
       backCanvas: null,
+      text: null,
+      textColor: "#000000",
       clothType: 0,
       items: [
         {
@@ -190,9 +211,12 @@ export default {
       return this.items[this.clothType].back;
     }
   },
+  mounted() {
+    this.initialize();
+  },
   methods: {
     initialize() {
-      this.canvas = new fabric.Canvas("tcanvas", {
+      this.canvas = new fabric.Canvas(this.$refs.canvas, {
         hoverCursor: "pointer",
         selection: true,
         selectionBorderColor: "blue"
@@ -208,24 +232,24 @@ export default {
         "selection:cleared": this.onSelectedCleared
       });
       // piggyback on `canvas.findTarget`, to fire "object:over" and "object:out" events
-      this.canvas.findTarget = (function(originalFn) {
-        return function() {
-          var target = originalFn.apply(this, arguments);
-          if (target) {
-            if (this._hoveredTarget !== target) {
-              this.canvas.fire("object:over", { target: target });
-              if (this._hoveredTarget) {
-                this.canvas.fire("object:out", { target: this._hoveredTarget });
-              }
-              this._hoveredTarget = target;
-            }
-          } else if (this._hoveredTarget) {
-            this.canvas.fire("object:out", { target: this._hoveredTarget });
-            this._hoveredTarget = null;
-          }
-          return target;
-        };
-      })(this.canvas.findTarget);
+      // this.canvas.findTarget = (originalFn => {
+      //   return () => {
+      //     var target = originalFn.apply(this, arguments);
+      //     if (target) {
+      //       if (this._hoveredTarget !== target) {
+      //         this.canvas.fire("object:over", { target: target });
+      //         if (this._hoveredTarget) {
+      //           this.canvas.fire("object:out", { target: this._hoveredTarget });
+      //         }
+      //         this._hoveredTarget = target;
+      //       }
+      //     } else if (this._hoveredTarget) {
+      //       this.canvas.fire("object:out", { target: this._hoveredTarget });
+      //       this._hoveredTarget = null;
+      //     }
+      //     return target;
+      //   };
+      // })(this.canvas.findTarget);
 
       this.canvas.on("object:over", function() {
         //e.target.setFill('red');
@@ -263,12 +287,30 @@ export default {
       // $("#texteditor").css("display", "none");
       // $("#text-string").val("");
       // $("#imageeditor").css("display", "none");
+    },
+    addText() {
+      if (this.text === "" || this.text === undefined || this.text === null) {
+        return;
+      }
+
+      const textSample = new fabric.Text(this.text, {
+        left: fabric.util.getRandomInt(0, 200),
+        top: fabric.util.getRandomInt(0, 400),
+        fontFamily: "helvetica",
+        angle: 0,
+        fill: this.textColor,
+        scaleX: 0.5,
+        scaleY: 0.5,
+        fontWeight: "",
+        hasRotatingPoint: true
+      });
+      this.canvas.add(textSample);
     }
   }
 };
 </script>
 
-<style scoped>
+<style>
 .color-preview {
   border: 1px solid black;
   margin: 5px;
@@ -279,5 +321,11 @@ export default {
   overflow: hidden;
   width: 30px;
   height: 30px;
+}
+.canvas-container {
+  background-color: unset !important;
+}
+.canvas-container:hover {
+  border: 1px solid black;
 }
 </style>
