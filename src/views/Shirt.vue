@@ -346,8 +346,8 @@ export default {
       }
 
       const textSample = new fabric.Text(this.text, {
-        left: fabric.util.getRandomInt(0, 200),
-        top: fabric.util.getRandomInt(0, 400),
+        left: fabric.util.getRandomInt(0, 150),
+        top: fabric.util.getRandomInt(0, 350),
         fontFamily: "helvetica",
         angle: 0,
         fill: this.textColor,
@@ -363,10 +363,19 @@ export default {
       this[this.canvas].remove(this[this.canvas].getActiveObject());
     },
     addEmoji(emoji) {
-      fabric.Image.fromURL(emoji, image => {
-        var img1 = image.set({ left: 0, top: 0, height: 100, width: 100 });
-        this[this.canvas].add(img1);
-      });
+      try {
+        fabric.Image.fromURL(emoji, image => {
+          var img1 = image.set({
+            left: fabric.util.getRandomInt(0, 150),
+            top: fabric.util.getRandomInt(0, 350),
+            height: 100,
+            width: 100
+          });
+          this[this.canvas].add(img1);
+        });
+      } catch (error) {
+        console.log(error);
+      }
     }
   }
 };
