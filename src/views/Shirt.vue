@@ -115,6 +115,24 @@
                   </b-card-body>
                 </b-collapse>
               </b-card>
+
+              <!-- Image -->
+              <b-card no-body class="mb-1">
+                <b-card-header header-tag="header" class="p-1" role="tab">
+                  <b-button block v-b-toggle.accordion-6 variant="info">
+                    Image
+                  </b-button>
+                </b-card-header>
+                <b-collapse
+                  id="accordion-6"
+                  accordion="my-accordion"
+                  role="tabpanel"
+                >
+                  <b-card-body>
+                    <b-form-file v-model="image" accept="image/*" />
+                  </b-card-body>
+                </b-collapse>
+              </b-card>
             </div>
           </div>
         </div>
@@ -176,6 +194,7 @@ export default {
       text: null,
       textColor: "#000000",
       clothType: 0,
+      image: null,
       items: [
         {
           type: "Crew",
@@ -283,6 +302,34 @@ export default {
         }
       },
       immediate: true
+    },
+    image(file) {
+      if (file === null) {
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = event => {
+        let imgObj = new Image();
+
+        imgObj.src = event.target.result;
+
+        imgObj.onload = () => {
+          const image = new fabric.Image(imgObj);
+          image.set({
+            angle: 0,
+            padding: 0,
+            cornersize: 0
+          });
+          image.scaleToWidth(200);
+
+          this[this.canvas].centerObject(image);
+          this[this.canvas].add(image);
+          this[this.canvas].renderAll();
+        };
+      };
+      reader.readAsDataURL(file);
+      this.file = null;
     }
   },
   methods: {
@@ -363,19 +410,17 @@ export default {
       this[this.canvas].remove(this[this.canvas].getActiveObject());
     },
     addEmoji(emoji) {
-      try {
-        fabric.Image.fromURL(emoji, image => {
-          var img1 = image.set({
-            left: fabric.util.getRandomInt(0, 150),
-            top: fabric.util.getRandomInt(0, 350),
-            height: 100,
-            width: 100
-          });
-          this[this.canvas].add(img1);
+      fabric.loadSVGFromURL(emoji, (objects, options) => {
+        const obj = fabric.util.groupSVGElements(objects, options);
+        obj.set({
+          left: fabric.util.getRandomInt(0, 150),
+          top: fabric.util.getRandomInt(0, 350)
         });
-      } catch (error) {
-        console.log(error);
-      }
+        obj.scaleToWidth(80);
+        obj.scaleToHeight(80);
+
+        this[this.canvas].add(obj).renderAll();
+      });
     }
   }
 };
