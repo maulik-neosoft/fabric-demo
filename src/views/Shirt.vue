@@ -133,11 +133,23 @@
           <img v-if="isFront" :src="front" :style="getColorStyle" />
           <img v-else :src="back" :style="getColorStyle" />
           <div
-            id="drawingArea"
+            v-show="isFront"
             style="position: absolute;top: 100px;left: 160px;z-index: 10;width: 200px;height: 400px;"
           >
             <canvas
-              ref="canvas"
+              ref="canvasFront"
+              width="200"
+              height="400"
+              class="hover"
+              style="-webkit-user-select: none;"
+            />
+          </div>
+          <div
+            v-show="!isFront"
+            style="position: absolute;top: 100px;left: 160px;z-index: 10;width: 200px;height: 400px;"
+          >
+            <canvas
+              ref="canvasBack"
               width="200"
               height="400"
               class="hover"
@@ -156,7 +168,7 @@ import { fabric } from "fabric";
 export default {
   data() {
     return {
-      canvas: null,
+      // canvas: null,
       isFront: true,
       color: "#ffffff",
       frontCanvas: null,
@@ -253,19 +265,34 @@ export default {
     },
     back() {
       return this.items[this.clothType].back;
+    },
+    canvas() {
+      return this.isFront ? "frontCanvas" : "backCanvas";
     }
   },
-  mounted() {
-    this.initialize();
+  watch: {
+    isFront: {
+      handler: function(value) {
+        if (value && this.frontCanvas === null) {
+          this.$nextTick(function() {
+            this.initialize("canvasFront");
+          });
+        }
+        if (!value && this.backCanvas === null) {
+          this.initialize("canvasBack");
+        }
+      },
+      immediate: true
+    }
   },
   methods: {
-    initialize() {
-      this.canvas = new fabric.Canvas(this.$refs.canvas, {
+    initialize(reference) {
+      this[this.canvas] = new fabric.Canvas(this.$refs[reference], {
         hoverCursor: "pointer",
         selection: true,
         selectionBorderColor: "blue"
       });
-      this.canvas.on({
+      this[this.canvas].on({
         "object:moving": function(e) {
           e.target.opacity = 0.5;
         },
@@ -276,32 +303,12 @@ export default {
         "selection:cleared": this.onSelectedCleared
       });
 
-      // piggyback on `canvas.findTarget`, to fire "object:over" and "object:out" events
-      // this.canvas.findTarget = (originalFn => {
-      //   return () => {
-      //     var target = originalFn.apply(this, arguments);
-      //     if (target) {
-      //       if (this._hoveredTarget !== target) {
-      //         this.canvas.fire("object:over", { target: target });
-      //         if (this._hoveredTarget) {
-      //           this.canvas.fire("object:out", { target: this._hoveredTarget });
-      //         }
-      //         this._hoveredTarget = target;
-      //       }
-      //     } else if (this._hoveredTarget) {
-      //       this.canvas.fire("object:out", { target: this._hoveredTarget });
-      //       this._hoveredTarget = null;
-      //     }
-      //     return target;
-      //   };
-      // })(this.canvas.findTarget);
-
-      this.canvas.on("object:over", function() {
+      this[this.canvas].on("object:over", function() {
         //e.target.setFill('red');
         //canvas.renderAll();
       });
 
-      this.canvas.on("object:out", function() {
+      this[this.canvas].on("object:out", function() {
         //e.target.setFill('green');
         //canvas.renderAll();
       });
@@ -349,18 +356,16 @@ export default {
         fontWeight: "",
         hasRotatingPoint: true
       });
-      this.canvas.add(textSample);
+      this[this.canvas].add(textSample);
       this.text = null;
     },
     removeSelectedObject() {
-      this.canvas.remove(this.canvas.getActiveObject());
+      this[this.canvas].remove(this[this.canvas].getActiveObject());
     },
-    addEmoji() {
-      // scaleX: .25,
-      // scaleY: .25
-      fabric.Image.fromURL(require("@/assets/emoji/angry-1.svg"), image => {
-        var img1 = image.set({ left: 0, top: 0, height: 150, width: 150 });
-        this.canvas.add(img1);
+    addEmoji(emoji) {
+      fabric.Image.fromURL(emoji, image => {
+        var img1 = image.set({ left: 0, top: 0, height: 100, width: 100 });
+        this[this.canvas].add(img1);
       });
     }
   }
