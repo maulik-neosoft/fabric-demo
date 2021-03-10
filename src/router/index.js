@@ -14,6 +14,26 @@ const routes = [
     path: "/t-shirt",
     name: "T-Shirt",
     component: () => import("../views/Shirt.vue")
+  },
+  {
+    path: "/free-drawing",
+    name: "Free-Drawing",
+    component: () => import("../views/free-drawing.vue")
+  },
+  {
+    path: "/touch-events",
+    name: "Touch-Events",
+    component: () => import("../views/touch-events.vue")
+  },
+  {
+    path: "/custom-controller",
+    name: "Custom-Controller",
+    component: () => import("../views/custom-controller.vue")
+  },
+  {
+    path: "/custom-controls-polygon",
+    name: "Custom Controls Polygon",
+    component: () => import("../views/custom-controls-polygon.vue")
   }
 ];
 
