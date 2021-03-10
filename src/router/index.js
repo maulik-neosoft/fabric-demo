@@ -44,6 +44,11 @@ const routes = [
     path: "/polygon-animation",
     name: "Stroke Uniform",
     component: () => import("../views/polygon-points.vue")
+  },
+  {
+    path: "/quadratic-curve",
+    name: "Stroke Uniform",
+    component: () => import("../views/quadratic-curve.vue")
   }
 ];
 
