@@ -42,13 +42,28 @@ const routes = [
   },
   {
     path: "/polygon-animation",
-    name: "Stroke Uniform",
+    name: "Polygon Animation",
     component: () => import("../views/polygon-points.vue")
   },
   {
     path: "/quadratic-curve",
-    name: "Stroke Uniform",
+    name: "Quadratic Curve",
     component: () => import("../views/quadratic-curve.vue")
+  },
+  {
+    path: "/animation-easing",
+    name: "Animation Easing",
+    component: () => import("../views/animation-easing.vue")
+  },
+  {
+    path: "/standalone-controls",
+    name: "Standalone Controls",
+    component: () => import("../views/standalone-controls.vue")
+  },
+  {
+    path: "/static-canvas",
+    name: "Static Canvas",
+    component: () => import("../views/static-canvas.vue")
   }
 ];
 
