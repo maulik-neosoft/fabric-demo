@@ -34,6 +34,11 @@ const routes = [
     path: "/custom-controls-polygon",
     name: "Custom Controls Polygon",
     component: () => import("../views/custom-controls-polygon.vue")
+  },
+  {
+    path: "/stroke-uniform",
+    name: "Stroke Uniform",
+    component: () => import("../views/stroke-uniform.vue")
   }
 ];
 

@@ -16,10 +16,11 @@
 
 <script>
 import { fabric } from "fabric";
+
 export default {
   data() {
     return {
-      canvas: null,
+      canvas: null
     };
   },
   name: "custom-controller",
@@ -33,12 +34,12 @@ export default {
         height: 100,
         objectCaching: false,
         stroke: "lightgreen",
-        strokeWidth: 4,
+        strokeWidth: 4
       });
 
       this.canvas.add(rect);
       this.canvas.setActiveObject(rect);
-    },
+    }
   },
   mounted() {
     this.canvas = new fabric.Canvas("c");

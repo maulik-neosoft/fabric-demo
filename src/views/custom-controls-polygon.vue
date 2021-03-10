@@ -40,8 +40,10 @@ export default {
         poly.controls = poly.points.reduce((acc, point, index) => {
           acc["p" + index] = new fabric.Control({
             positionHandler: (dim, finalMatrix, fabricObject) => {
-              const x = fabricObject.points[index].x - fabricObject.pathOffset.x;
-              const y = fabricObject.points[index].y - fabricObject.pathOffset.y;
+              const x =
+                fabricObject.points[index].x - fabricObject.pathOffset.x;
+              const y =
+                fabricObject.points[index].y - fabricObject.pathOffset.y;
               this.pointIndex += 1;
               return fabric.util.transformPoint(
                 { x: x, y: y },
